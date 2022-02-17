@@ -14,6 +14,7 @@ class Input extends StatelessWidget {
   final void Function(String)? onChanged;
   final Widget? icon;
   final bool? autofocus;
+  final TextInputAction? textInputAction;
   const Input({
     Key? key,
     this.submitFunction,
@@ -28,6 +29,7 @@ class Input extends StatelessWidget {
     this.onChanged,
     this.icon,
     this.autofocus,
+    this.textInputAction,
   }) : super(key: key);
 
   @override
@@ -44,6 +46,7 @@ class Input extends StatelessWidget {
       onFieldSubmitted: (value) {
         submitFunction ?? submitFunction!();
       },
+      textInputAction: textInputAction,
       decoration: InputDecoration(
           hintText: hint,
           hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,

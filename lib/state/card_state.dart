@@ -13,4 +13,9 @@ class CardStateProvider with ChangeNotifier {
     paymentMeans.add(paymentMean);
     notifyListeners();
   }
+
+  deletePaymentMean(PaymentMean paymentMean) {
+    paymentMeans.remove(paymentMean);
+    notifyListeners();
+  }
 }

@@ -23,78 +23,95 @@ class _DialogNewCardState extends ConsumerState<DialogNewCard> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      child: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Ajout de carte',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-              const SizedBox(
-                height: 35,
-              ),
-              Input(
-                validatorFunction: checkEmptyValue,
-                label: 'Nom de la carte',
-                controller: _nameController,
-                icon: const Icon(Icons.person),
-              ),
-              const SizedBox(height: 20),
-              Input(
-                validatorFunction: numCardValidator,
-                label: 'Numéro de carte',
-                controller: _cardNumController,
-                keyboard: TextInputType.number,
-                onChanged: formatCardNumber,
-                formatter: createFormatters(19, r'[0-9]'),
-                icon: const Icon(Icons.payment),
-              ),
-              const SizedBox(height: 20),
-              Input(
-                validatorFunction: cvvValidator,
-                label: 'Cvc',
-                controller: _cvvController,
-              ),
-              const SizedBox(height: 20),
-              DropdownDate(
-                monthKey: GlobalKey(),
-                monthController: month,
-                yearKey: GlobalKey(),
-                yearController: year,
-                selectYear: selectYear,
-                selectMonth: selectMonth,
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: 60,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.of(context).pop(
-                        PaymentMean(
-                          name: _nameController.text,
-                          type: 'card',
-                          cardNumber: _cardNumController.text,
-                          cardCvc: _cvvController.text,
-                          cardExpMonth: month!,
-                          cardExpYear: year!,
-                        ),
-                      );
-                    }
-                  },
-                  child: const Text('Ajouter'),
+      child: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Ajout de carte',
+                  style: Theme.of(context).textTheme.headline4,
                 ),
-              ),
-            ],
+                const SizedBox(
+                  height: 35,
+                ),
+                Input(
+                  validatorFunction: checkEmptyValue,
+                  label: 'Nom de la carte',
+                  controller: _nameController,
+                  icon: const Icon(Icons.person),
+                  textInputAction: TextInputAction.next,
+                ),
+                const SizedBox(height: 20),
+                Input(
+                  validatorFunction: numCardValidator,
+                  label: 'Numéro de carte',
+                  controller: _cardNumController,
+                  keyboard: TextInputType.number,
+                  onChanged: formatCardNumber,
+                  formatter: createFormatters(19, r'[0-9]'),
+                  icon: const Icon(Icons.payment),
+                  textInputAction: TextInputAction.next,
+                ),
+                const SizedBox(height: 20),
+                Input(
+                  validatorFunction: cvvValidator,
+                  label: 'Cvc',
+                  controller: _cvvController,
+                  keyboard: TextInputType.number,
+                  formatter: createFormatters(3, r'[0-9]'),
+                  textInputAction: TextInputAction.done,
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Date d\'expiration',
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
+                const SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
+                  child: DropdownDate(
+                    monthKey: GlobalKey(),
+                    monthController: month,
+                    yearKey: GlobalKey(),
+                    yearController: year,
+                    selectYear: selectYear,
+                    selectMonth: selectMonth,
+                  ),
+                ),
+                const SizedBox(
+                  height: 50,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 60,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        Navigator.of(context).pop(
+                          PaymentMean(
+                            name: _nameController.text,
+                            type: 'card',
+                            cardNumber: _cardNumController.text,
+                            cardCvc: _cvvController.text,
+                            cardExpMonth: month!,
+                            cardExpYear: year!,
+                          ),
+                        );
+                      }
+                    },
+                    child: const Text('Ajouter'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
