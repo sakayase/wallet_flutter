@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Input extends StatelessWidget {
-  final void Function()? submitFunction;
   final String? Function(String?)? validatorFunction;
   final String? hint;
   final String? label;
@@ -15,9 +14,9 @@ class Input extends StatelessWidget {
   final Widget? icon;
   final bool? autofocus;
   final TextInputAction? textInputAction;
+  final FocusNode? focusNode;
   const Input({
     Key? key,
-    this.submitFunction,
     required this.validatorFunction,
     this.hint,
     this.label,
@@ -30,11 +29,13 @@ class Input extends StatelessWidget {
     this.icon,
     this.autofocus,
     this.textInputAction,
+    this.focusNode,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      focusNode: focusNode,
       autofocus: autofocus != null ? autofocus! : false,
       inputFormatters: formatter,
       controller: controller,
@@ -42,9 +43,6 @@ class Input extends StatelessWidget {
       initialValue: null,
       validator: (value) {
         return validatorFunction!(value);
-      },
-      onFieldSubmitted: (value) {
-        submitFunction ?? submitFunction!();
       },
       textInputAction: textInputAction,
       decoration: InputDecoration(

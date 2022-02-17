@@ -110,12 +110,17 @@ class _WalletPageState extends ConsumerState<WalletPage> {
           child: ElevatedButton(
             child: const Text('Ajouter une carte'),
             onPressed: () async {
-              PaymentMean? newPaymentMean = await showDialog(
-                context: context,
-                builder: (context) {
-                  return const DialogNewCard();
-                },
+              PaymentMean? newPaymentMean = await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const DialogNewCard(),
+                ),
               );
+              // showDialog(
+              //   context: context,
+              //   builder: (context) {
+              //     return const DialogNewCard();
+              //   },
+              // );
               if (newPaymentMean != null) {
                 DocumentReference docRef = await FirebaseFirestore.instance
                     .collection(widget.collectionPath)

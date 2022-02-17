@@ -22,8 +22,13 @@ class _DialogNewCardState extends ConsumerState<DialogNewCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: SingleChildScrollView(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Ajout de carte',
+        ),
+      ),
+      body: SingleChildScrollView(
         child: Form(
           key: _formKey,
           child: Padding(
@@ -33,10 +38,6 @@ class _DialogNewCardState extends ConsumerState<DialogNewCard> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  'Ajout de carte',
-                  style: Theme.of(context).textTheme.headline4,
-                ),
                 const SizedBox(
                   height: 35,
                 ),
@@ -46,6 +47,7 @@ class _DialogNewCardState extends ConsumerState<DialogNewCard> {
                   controller: _nameController,
                   icon: const Icon(Icons.person),
                   textInputAction: TextInputAction.next,
+                  autofocus: true,
                 ),
                 const SizedBox(height: 20),
                 Input(
@@ -73,45 +75,40 @@ class _DialogNewCardState extends ConsumerState<DialogNewCard> {
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
                 const SizedBox(height: 10),
-                GestureDetector(
-                  onTap: () {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                  },
-                  child: DropdownDate(
-                    monthKey: GlobalKey(),
-                    monthController: month,
-                    yearKey: GlobalKey(),
-                    yearController: year,
-                    selectYear: selectYear,
-                    selectMonth: selectMonth,
-                  ),
-                ),
-                const SizedBox(
-                  height: 50,
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: 60,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Navigator.of(context).pop(
-                          PaymentMean(
-                            name: _nameController.text,
-                            type: 'card',
-                            cardNumber: _cardNumController.text,
-                            cardCvc: _cvvController.text,
-                            cardExpMonth: month!,
-                            cardExpYear: year!,
-                          ),
-                        );
-                      }
-                    },
-                    child: const Text('Ajouter'),
-                  ),
+                DropdownDate(
+                  monthKey: const Key('month'),
+                  monthController: month,
+                  yearKey: const Key('year'),
+                  yearController: year,
+                  selectYear: selectYear,
+                  selectMonth: selectMonth,
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+      bottomSheet: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: 60,
+          child: ElevatedButton(
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                Navigator.of(context).pop(
+                  PaymentMean(
+                    name: _nameController.text,
+                    type: 'card',
+                    cardNumber: _cardNumController.text,
+                    cardCvc: _cvvController.text,
+                    cardExpMonth: month!,
+                    cardExpYear: year!,
+                  ),
+                );
+              }
+            },
+            child: const Text('Ajouter'),
           ),
         ),
       ),
@@ -147,12 +144,14 @@ class _DialogNewCardState extends ConsumerState<DialogNewCard> {
   }
 
   selectMonth(value) {
+    FocusScope.of(context).unfocus();
     setState(() {
       month = value.toString();
     });
   }
 
   selectYear(value) {
+    FocusScope.of(context).unfocus();
     setState(() {
       year = value.toString();
     });

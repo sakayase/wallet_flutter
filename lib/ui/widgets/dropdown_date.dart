@@ -10,9 +10,9 @@ class DropdownDate extends StatelessWidget {
     required this.selectYear,
     required this.selectMonth,
   }) : super(key: key);
-  final GlobalKey<FormFieldState> monthKey;
+  final Key monthKey;
   final String? monthController;
-  final GlobalKey<FormFieldState> yearKey;
+  final Key yearKey;
   final String? yearController;
   final void Function(String?)? selectYear;
   final void Function(String?)? selectMonth;
