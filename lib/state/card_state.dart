@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+
 import 'package:wallet_flutter/models/payment_mean/payment_mean.dart';
 
 class CardStateProvider with ChangeNotifier {

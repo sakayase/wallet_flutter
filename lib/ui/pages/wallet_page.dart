@@ -1,12 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:wallet_flutter/api.dart';
+import 'package:wallet_flutter/models/payment_mean/payment_mean.dart';
 import 'package:wallet_flutter/provider/card_provider.dart';
 import 'package:wallet_flutter/ui/widgets/dialog_new_card.dart';
 import 'package:wallet_flutter/ui/widgets/list_tile_wallet.dart';
-
-import '../../models/payment_mean/payment_mean.dart';
 
 class WalletPage extends ConsumerStatefulWidget {
   const WalletPage({Key? key, required this.collectionPath}) : super(key: key);
@@ -30,19 +31,10 @@ class _WalletPageState extends ConsumerState<WalletPage> {
 
   getWallet() async {
     List<PaymentMean> paymentMeans = [];
-
     QuerySnapshot<Map<String, dynamic>> paymentMeansData =
-        await FirebaseFirestore.instance
-            .collection(widget.collectionPath)
-            .doc(FirebaseAuth.instance.currentUser!.uid)
-            .collection('wallet')
-            .get();
-
-    DocumentSnapshot<Map<String, dynamic>> userData = await FirebaseFirestore
-        .instance
-        .collection(widget.collectionPath)
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
+        await getWalletFirebase(widget.collectionPath);
+    DocumentSnapshot<Map<String, dynamic>> userData =
+        await getUserDataFirebase(widget.collectionPath);
 
     String? selectedId;
     if ((userData.data()!.keys.contains('cartePaiement')) &&
@@ -115,18 +107,9 @@ class _WalletPageState extends ConsumerState<WalletPage> {
                   builder: (context) => const DialogNewCard(),
                 ),
               );
-              // showDialog(
-              //   context: context,
-              //   builder: (context) {
-              //     return const DialogNewCard();
-              //   },
-              // );
               if (newPaymentMean != null) {
-                DocumentReference docRef = await FirebaseFirestore.instance
-                    .collection(widget.collectionPath)
-                    .doc(FirebaseAuth.instance.currentUser!.uid)
-                    .collection('wallet')
-                    .add(newPaymentMean.toJson());
+                DocumentReference docRef = await addCardWalletFirebase(
+                    widget.collectionPath, newPaymentMean);
                 newPaymentMean.setId(docRef.id);
                 ref.read(cardStateProvider).addPaymentMeans(newPaymentMean);
               }

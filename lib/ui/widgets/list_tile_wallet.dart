@@ -1,9 +1,10 @@
 import 'dart:math';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:wallet_flutter/api.dart';
 import 'package:wallet_flutter/models/payment_mean/payment_mean.dart';
 import 'package:wallet_flutter/provider/card_provider.dart';
 
@@ -58,10 +59,7 @@ class ListTileWallet extends ConsumerWidget {
         );
         if (delete) {
           DocumentSnapshot<Map<String, dynamic>> userData =
-              await FirebaseFirestore.instance
-                  .collection(collectionPath)
-                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                  .get();
+              await getUserDataFirebase(collectionPath);
 
           String? selectedId;
           if ((userData.data()!.keys.contains('cartePaiement')) &&
@@ -71,18 +69,10 @@ class ListTileWallet extends ConsumerWidget {
           }
 
           if (selectedId == paymentMean.id) {
-            FirebaseFirestore.instance
-                .collection(collectionPath)
-                .doc(FirebaseAuth.instance.currentUser!.uid)
-                .update({'cartePaiement': null});
+            await deleteSelectedCardFirebase(collectionPath);
           }
 
-          await FirebaseFirestore.instance
-              .collection(collectionPath)
-              .doc(FirebaseAuth.instance.currentUser!.uid)
-              .collection('wallet')
-              .doc(paymentMean.id!)
-              .delete();
+          await deleteCardWalletFirebase(collectionPath, paymentMean.id!);
           ref.read(cardStateProvider).deletePaymentMean(paymentMean);
         }
         return delete;
@@ -93,10 +83,9 @@ class ListTileWallet extends ConsumerWidget {
             groupValue: groupValue,
             onChanged: (PaymentMean? value) async {
               setGroupValue(value);
-              FirebaseFirestore.instance
-                  .collection(collectionPath)
-                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                  .update({'cartePaiement': value!.toJson()});
+              if (value != null) {
+                setSelectedCardFirebase(collectionPath, value);
+              }
             }),
         title: Text(paymentMean.name),
         subtitle:
