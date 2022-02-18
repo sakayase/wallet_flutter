@@ -1,11 +1,8 @@
 # wallet_flutter
 
-A new flutter module project.
+Module de gestion de carte bancaires avec Firebase
 
 ## Getting Started
 
-For help getting started with Flutter, view our online
-[documentation](https://flutter.dev/).
-
-For instructions integrating Flutter modules to your existing applications,
-see the [add-to-app documentation](https://flutter.dev/docs/development/add-to-app).
+Appeler le repo dans **pubspec.yaml** et l'importer dans votre code.
+Il faut au préalable avoir configuré Firebase dans votre code.  
