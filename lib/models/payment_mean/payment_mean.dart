@@ -6,7 +6,7 @@ part 'payment_mean.g.dart';
 class PaymentMean {
   PaymentMean({
     this.id,
-    required this.name,
+    required this.nom,
     required this.type,
     required this.cardNumber,
     required this.cardCvc,
@@ -14,12 +14,12 @@ class PaymentMean {
     required this.cardExpYear,
   });
   String? id;
-  String name;
+  String nom;
   String type;
-  String cardNumber;
-  String cardCvc;
-  String cardExpMonth;
-  String cardExpYear;
+  int cardNumber;
+  int cardCvc;
+  int cardExpMonth;
+  int cardExpYear;
 
   setId(String id) {
     this.id = id;

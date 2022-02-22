@@ -8,18 +8,18 @@ part of 'payment_mean.dart';
 
 PaymentMean _$PaymentMeanFromJson(Map<String, dynamic> json) => PaymentMean(
       id: json['id'] as String?,
-      name: json['name'] as String,
+      nom: json['nom'] as String,
       type: json['type'] as String,
-      cardNumber: json['cardNumber'] as String,
-      cardCvc: json['cardCvc'] as String,
-      cardExpMonth: json['cardExpMonth'] as String,
-      cardExpYear: json['cardExpYear'] as String,
+      cardNumber: json['cardNumber'] as int,
+      cardCvc: json['cardCvc'] as int,
+      cardExpMonth: json['cardExpMonth'] as int,
+      cardExpYear: json['cardExpYear'] as int,
     );
 
 Map<String, dynamic> _$PaymentMeanToJson(PaymentMean instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'name': instance.name,
+      'nom': instance.nom,
       'type': instance.type,
       'cardNumber': instance.cardNumber,
       'cardCvc': instance.cardCvc,

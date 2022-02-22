@@ -33,14 +33,14 @@ class ListTileWallet extends ConsumerWidget {
           )
         ],
       ),
-      key: Key(paymentMean.name + Random().nextInt(1000).toString()),
+      key: Key(paymentMean.nom + Random().nextInt(1000).toString()),
       confirmDismiss: (direction) async {
         bool delete = await showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Attention'),
             content: Text(
-                'Vous êtes sur le point supprimer la carte ${paymentMean.name}, voulez vous continuer'),
+                'Vous êtes sur le point supprimer la carte ${paymentMean.nom}, voulez vous continuer'),
             actions: [
               TextButton(
                 onPressed: (() {
@@ -87,9 +87,10 @@ class ListTileWallet extends ConsumerWidget {
                 setSelectedCardFirebase(collectionPath, value);
               }
             }),
-        title: Text(paymentMean.name),
-        subtitle:
-            Text(paymentMean.cardNumber.replaceRange(0, 14, '****-****-****')),
+        title: Text(paymentMean.nom),
+        subtitle: Text(paymentMean.cardNumber
+            .toString()
+            .replaceRange(0, 12, '****-****-****-')),
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

@@ -23,9 +23,7 @@ class _WalletPageState extends ConsumerState<WalletPage> {
 
   @override
   void initState() {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      getWallet();
-    });
+    getWallet();
     super.initState();
   }
 
@@ -42,23 +40,21 @@ class _WalletPageState extends ConsumerState<WalletPage> {
       selectedId = PaymentMean.fromJson(userData.data()!['cartePaiement']).id!;
     }
 
-    if (mounted) {
-      PaymentMean? detectedSelectedPayment;
-      for (var card in paymentMeansData.docs) {
-        PaymentMean paymentMean = PaymentMean.fromJson(card.data());
-        paymentMean.setId(card.id);
-        if (selectedId == card.id) {
-          detectedSelectedPayment = paymentMean;
-        }
-        paymentMeans.add(paymentMean);
+    PaymentMean? detectedSelectedPayment;
+    for (var card in paymentMeansData.docs) {
+      PaymentMean paymentMean = PaymentMean.fromJson(card.data());
+      paymentMean.setId(card.id);
+      if (selectedId == card.id) {
+        detectedSelectedPayment = paymentMean;
       }
-      ref.read(cardStateProvider).setPaymentMeans(paymentMeans);
-
-      setState(() {
-        groupValue = detectedSelectedPayment;
-        loading = false;
-      });
+      paymentMeans.add(paymentMean);
     }
+
+    ref.read(cardStateProvider).setPaymentMeans(paymentMeans);
+    setState(() {
+      groupValue = detectedSelectedPayment;
+      loading = false;
+    });
   }
 
   @override
@@ -94,26 +90,29 @@ class _WalletPageState extends ConsumerState<WalletPage> {
                 ),
         ),
       ),
-      bottomSheet: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-        child: SizedBox(
-          height: 60,
-          width: MediaQuery.of(context).size.width,
-          child: ElevatedButton(
-            child: const Text('Ajouter une carte'),
-            onPressed: () async {
-              PaymentMean? newPaymentMean = await Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const DialogNewCard(),
-                ),
-              );
-              if (newPaymentMean != null) {
-                DocumentReference docRef = await addCardWalletFirebase(
-                    widget.collectionPath, newPaymentMean);
-                newPaymentMean.setId(docRef.id);
-                ref.read(cardStateProvider).addPaymentMeans(newPaymentMean);
-              }
-            },
+      bottomSheet: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          child: SizedBox(
+            height: 60,
+            width: MediaQuery.of(context).size.width,
+            child: ElevatedButton(
+              child: const Text('Ajouter une carte'),
+              onPressed: () async {
+                PaymentMean? newPaymentMean = await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const DialogNewCard(),
+                  ),
+                );
+                if (newPaymentMean != null) {
+                  DocumentReference docRef = await addCardWalletFirebase(
+                      widget.collectionPath, newPaymentMean);
+                  newPaymentMean.setId(docRef.id);
+                  ref.read(cardStateProvider).addPaymentMeans(newPaymentMean);
+                }
+              },
+            ),
           ),
         ),
       ),
